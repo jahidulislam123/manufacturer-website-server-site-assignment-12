@@ -17,12 +17,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         await client.connect();
         console.log('database connected ');
         const toolsCollection = client.db('bycle').collection('tools');
+        const bookingCollection = client.db('bycle').collection('bookings');
         app.get('/tools',async(req,res)=>{
            const query ='';
            const cursor =toolsCollection.find(query);
            const  tools =await cursor.toArray();
            res.send(tools);
            //
+        })
+        app.post('/booking',async(req,res)=>{
+            const booking =req.body;
+            const result = await bookingCollection.insertOne(booking);
+            res.result;
+
         })
 
      }
