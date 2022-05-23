@@ -22,6 +22,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
            const cursor =toolsCollection.find(query);
            const  tools =await cursor.toArray();
            res.send(tools);
+           //
         })
 
      }
