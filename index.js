@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT ||5000;
 
 app.use(cors());
@@ -31,6 +31,48 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
             res.result;
 
         })
+
+        
+      //   app.get('/booking',async(req,res)=>{
+      //     const query ='';
+      //     const tolo =bookingCollection.find(query);
+      //     const result =await tolo.toArray();
+      //     res.send(result);
+
+      //   })
+
+      //   app.get('/booking/:id',async(req,res)=>{
+      //     const id=req.params.id;
+      //     const query ={_id:ObjectID(id)}
+      //     const result =await bookingCollection.findOne(query);
+      //     res.send(result);
+      // })
+
+        app.get('/booking',async(req,res)=>{
+          const email =req.query.email;
+          const query={email:email};
+          const bookingitem = await bookingCollection.find(query);
+          const items =await bookingitem.toArray();
+          res.send(items);
+        })
+
+        
+
+        app.delete('/booking',async(req,res)=>{
+          const id =req.query.amount;
+          const query ={_id:ObjectId(id)};
+          const delete1 =await bookingCollection.deleteOne(query);
+          res.send(delete1);
+        })
+
+//
+        
+//
+
+
+
+        // upore ar hat debona shob kaj ekhan theke korbo ami 
+
 
      }
      finally{
