@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT ||5000;
@@ -19,6 +20,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         const toolsCollection = client.db('bycle').collection('tools');
         const bookingCollection = client.db('bycle').collection('bookings');
         const reviewCollection = client.db('bycle').collection('review');
+        const userCollection = client.db('bycle').collection('users');
         app.get('/tools',async(req,res)=>{
            const query ='';
            const cursor =toolsCollection.find(query);
@@ -26,6 +28,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
            res.send(tools);
            //
         })
+
+        app.put('/user/:email',async(req,res)=>{
+          const email =req.params.email;
+          const user =req.body;
+          const filter = {email:email};
+          const options ={upsert:true};
+          const updateDoc = {
+            $set: user,
+          };
+          const result = await userCollection.updateOne(filter,updateDoc,options);
+          const token = jwt.sign({email : email},process.env.ACCESS_TOKEN_SECRET, {expiresIn :'1h'})
+          res.send({result, token});
+
+        })
+
         app.post('/booking',async(req,res)=>{
             const booking =req.body;
             const result = await bookingCollection.insertOne(booking);
