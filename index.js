@@ -18,6 +18,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         console.log('database connected ');
         const toolsCollection = client.db('bycle').collection('tools');
         const bookingCollection = client.db('bycle').collection('bookings');
+        const reviewCollection = client.db('bycle').collection('review');
         app.get('/tools',async(req,res)=>{
            const query ='';
            const cursor =toolsCollection.find(query);
@@ -28,8 +29,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
         app.post('/booking',async(req,res)=>{
             const booking =req.body;
             const result = await bookingCollection.insertOne(booking);
-            res.result;
+            res.send(result);
 
+        })
+
+        app.post('/review',async(req,res)=>{
+          const review =req.body;
+          const result =await reviewCollection.insertOne(review);
+          res.send(result);
+        })
+
+        app.get('/review',async(req,res)=>{
+          const query ='';
+          const review = await reviewCollection.find(query);
+          const  result = await review.toArray();
+          res.send(result);
         })
 
         
