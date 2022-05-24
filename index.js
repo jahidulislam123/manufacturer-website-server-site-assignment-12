@@ -112,7 +112,7 @@ function verifyJWT(req,res,next){
           
         })
 
-        app.get('/user', verifyJWT,async(req,res)=>{
+        app.get('/user', async(req,res)=>{
           const users =await userCollection.find().toArray();
           res.send(users);
         })
