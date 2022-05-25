@@ -100,6 +100,12 @@ function verifyJWT(req,res,next){
 
         })
 
+        app.post('/tools',async(req,res)=>{
+          const adding =req.body;
+          const addresult =await toolsCollection.insertOne(adding);
+          res.send(addresult);
+        })
+
         app.post('/review',async(req,res)=>{
           const review =req.body;
           const result =await reviewCollection.insertOne(review);
