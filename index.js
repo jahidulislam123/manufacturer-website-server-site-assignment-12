@@ -4,6 +4,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { send } = require('express/lib/response');
 const port = process.env.PORT ||5000;
 
 app.use(cors());
@@ -155,6 +156,14 @@ function verifyJWT(req,res,next){
           const users =await userCollection.find().toArray();
           res.send(users);
         })
+        //
+        app.get('/bookingss',async(req,res)=>{
+          const allbookd =await bookingCollection.find().toArray();
+          res.send(allbookd);
+
+        })
+
+        //
         
 
         app.delete('/booking',async(req,res)=>{
