@@ -173,6 +173,14 @@ function verifyJWT(req,res,next){
           res.send(delete1);
         })
 
+
+        app.delete('/deleted',async(req,res)=>{
+          const id =req.query.amount;
+          const query ={_id:ObjectId(id)};
+          const delete1 =await toolsCollection.deleteOne(query);
+          res.send(delete1);
+        })
+
 //
         
 //
