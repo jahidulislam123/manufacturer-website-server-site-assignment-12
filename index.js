@@ -6,7 +6,7 @@ const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const { send } = require('express/lib/response');
 const port = process.env.PORT ||5000;
-
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 app.use(cors());
 app.use(express.json());
 
@@ -15,7 +15,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 function verifyJWT(req,res,next){
-  console.log('abc')
+  
   const authHeader =req.headers.authorization;
  
   if(!authHeader){
@@ -40,6 +40,7 @@ function verifyJWT(req,res,next){
         const bookingCollection = client.db('bycle').collection('bookings');
         const reviewCollection = client.db('bycle').collection('review');
         const userCollection = client.db('bycle').collection('users');
+        const paymentCollection = client.db('bycle').collection('payments');
         app.get('/tools',async(req,res)=>{
            const query ='';
            const cursor =toolsCollection.find(query);
@@ -63,6 +64,25 @@ function verifyJWT(req,res,next){
         });
 
 
+
+
+        //
+        app.patch('/booking/:id',verifyJWT,async(req,res)=>{
+          const id =  req.params.id;
+          const payment =req.body;
+          const filter ={_id:ObjectId(id)}
+          const updateDoc = {
+            $set: {
+              paid:true,
+              transaction :payment.transactionId
+
+            }
+          };
+          const result =await paymentCollection.insertOne(payment);
+          const updatedBooking = await bookingCollection.updateOne(filter,updateDoc);
+          res.send(updateDoc);
+        })
+        //
 
         app.get('/admin/:email',async(req,res)=>{
           const email =req.params.email;
@@ -128,6 +148,24 @@ function verifyJWT(req,res,next){
       //     res.send(result);
 
       //   })
+
+        app.post('/create-payment-intent', verifyJWT, async(req,res)=>{
+        const service=req.body;
+        const price =service.price;
+        const amount =price*100;
+        const paymentIntent =await stripe.paymentIntents.create({
+          amount: amount,
+          currency :'usd',
+          payment_method_types:['card']
+
+        });
+        res.send({clientSecret: paymentIntent.client_secret})
+        
+
+
+        })
+
+
 
       //   app.get('/booking/:id',async(req,res)=>{
       //     const id=req.params.id;
