@@ -149,6 +149,8 @@ function verifyJWT(req,res,next){
 
       //   })
 
+      
+
         app.post('/create-payment-intent', verifyJWT, async(req,res)=>{
         const service=req.body;
         const price =service.price;
