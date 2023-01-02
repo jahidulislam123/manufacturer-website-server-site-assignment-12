@@ -268,11 +268,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`BYCLE PARTS APP listening on port ${port}`)
 })
-
-
-
-const path = require('path');
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/index.html'));
-});
