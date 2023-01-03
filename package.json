@@ -4,10 +4,7 @@
   "description": "",
  
   "main": "index.js",
-  "engines": {
-    "node": "18.x"
-  },
-  "module": "node",
+
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",
