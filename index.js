@@ -3,7 +3,12 @@ const cors = require("cors");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const app = express();
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const {
+  MongoClient,
+  ServerApiVersion,
+  ObjectID,
+  ObjectId,
+} = require("mongodb");
 const { send } = require("express/lib/response");
 const port = process.env.PORT || 4000;
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -230,13 +235,21 @@ async function run() {
     //
 
     app.get("/parts", async (req, res) => {
-      const query = "";
+      const query = {};
       const review = await partsCollection.find(query);
       const result = await review.toArray();
       res.send(result);
     });
 
     //
+
+    app.get("/parts/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const query = { _id: ObjectId(id) };
+      const result = await partsCollection.findOne(query);
+      res.send(result);
+    });
 
     // upore ar hat debona shob kaj ekhan theke korbo ami
   } finally {
